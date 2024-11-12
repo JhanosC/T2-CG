@@ -18,10 +18,29 @@ def init():
     glEnable(GL_CULL_FACE)
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
 
-    o = Objeto3D()
-    o.LoadFile('macaco.obj')
     o2 = Objeto3D()
-    o2.LoadFile('dude.obj')
+    o2.LoadFile('macaco.obj')
+    o = Objeto3D()
+    o.LoadFile('dude.obj')
+
+    DefineLuz()
+    PosicUser()
+
+def init2():
+    global o
+    global o2
+    glClearColor(0.5, 0.5, 0.9, 1.0)
+    glClearDepth(1.0)
+
+    glDepthFunc(GL_LESS)
+    glEnable(GL_DEPTH_TEST)
+    glEnable(GL_CULL_FACE)
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
+
+    o2 = Objeto3D()
+    o2.LoadFile('macaco.obj')
+    o = Objeto3D()
+    o.LoadFile('dude.obj')
 
     DefineLuz()
     PosicUser()
@@ -137,6 +156,20 @@ def desenha():
     glutSwapBuffers()
     pass
 
+def desenha2():
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+
+    glMatrixMode(GL_MODELVIEW)
+
+    DesenhaPiso()
+    #DesenhaCubo()    
+    o2.Desenha()
+    o2.DesenhaWireframe()
+    #o.DesenhaVertices()
+
+    glutSwapBuffers()
+    pass
+
 def teclado(key, x, y):
     o.rotation = (0, 1, 0, o.rotation[3] + 10)
 
@@ -151,7 +184,7 @@ def main():
     glutInitDisplayMode(GLUT_RGBA | GLUT_DEPTH)
 
     # Especifica o tamnho inicial em pixels da janela GLUT
-    glutInitWindowSize(640, 480)
+    glutInitWindowSize(400, 400)
 
     # Especifica a posição de início da janela
     glutInitWindowPosition(100, 100)
@@ -168,11 +201,45 @@ def main():
     # Registra a funcao callback para tratamento das teclas ASCII
     glutKeyboardFunc(teclado)
 
+
     try:
         # Inicia o processamento e aguarda interacoes do usuario
         glutMainLoop()
     except SystemExit:
-        pass
+        print('idk')
 
+
+
+    #Replicando tudo:
+
+    glutInit(sys.argv)
+
+    # Define o modelo de operacao da GLUT
+    glutInitDisplayMode(GLUT_RGBA | GLUT_DEPTH)
+
+    # Especifica o tamnho inicial em pixels da janela GLUT
+    glutInitWindowSize(400, 400)
+
+    # Especifica a posição de início da janela
+    glutInitWindowPosition(450, 100)
+
+    # Cria a janela passando o título da mesma como argumento
+    glutCreateSubWindow('Computacao Grafica: 3D 2nd window')
+
+    # Função responsável por fazer as inicializações
+    init()
+
+    # Registra a funcao callback de redesenho da janela de visualizacao
+    glutDisplayFunc(desenha2)
+
+    # Registra a funcao callback para tratamento das teclas ASCII
+    glutKeyboardFunc(teclado)
+
+
+    try:
+        # Inicia o processamento e aguarda interacoes do usuario
+        glutMainLoop()
+    except SystemExit:
+        print('idk')
 if __name__ == '__main__':
     main()
