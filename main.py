@@ -201,16 +201,7 @@ def main():
     # Registra a funcao callback para tratamento das teclas ASCII
     glutKeyboardFunc(teclado)
 
-
-    try:
-        # Inicia o processamento e aguarda interacoes do usuario
-        glutMainLoop()
-    except SystemExit:
-        print('idk')
-
-
-
-    #Replicando tudo:
+    # Replicando tudo:
 
     glutInit(sys.argv)
 
@@ -224,7 +215,7 @@ def main():
     glutInitWindowPosition(450, 100)
 
     # Cria a janela passando o título da mesma como argumento
-    glutCreateSubWindow('Computacao Grafica: 3D 2nd window')
+    glutCreateWindow('Computacao Grafica: 3D 2nd window')
 
     # Função responsável por fazer as inicializações
     init()
@@ -235,11 +226,13 @@ def main():
     # Registra a funcao callback para tratamento das teclas ASCII
     glutKeyboardFunc(teclado)
 
-
     try:
         # Inicia o processamento e aguarda interacoes do usuario
         glutMainLoop()
     except SystemExit:
         print('idk')
+
+
+
 if __name__ == '__main__':
     main()
