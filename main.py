@@ -170,6 +170,12 @@ def desenha2():
     glutSwapBuffers()
     pass
 
+def morphing(obj1: Objeto3D, obj2: Objeto3D):
+    morphed = Objeto3D()
+
+    pass
+
+def comparaVertices
 def teclado(key, x, y):
     o.rotation = (0, 1, 0, o.rotation[3] + 10)
 
