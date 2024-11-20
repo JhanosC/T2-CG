@@ -10,6 +10,7 @@ o2:Objeto3D
 def init():
     global o
     global o2
+    global o3
     glClearColor(0.5, 0.5, 0.9, 1.0)
     glClearDepth(1.0)
 
@@ -18,29 +19,14 @@ def init():
     glEnable(GL_CULL_FACE)
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
 
-    o2 = Objeto3D()
-    o2.LoadFile('macaco.obj')
     o = Objeto3D()
     o.LoadFile('dude.obj')
 
-    DefineLuz()
-    PosicUser()
-
-def init2():
-    global o
-    global o2
-    glClearColor(0.5, 0.5, 0.9, 1.0)
-    glClearDepth(1.0)
-
-    glDepthFunc(GL_LESS)
-    glEnable(GL_DEPTH_TEST)
-    glEnable(GL_CULL_FACE)
-    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
-
     o2 = Objeto3D()
     o2.LoadFile('macaco.obj')
-    o = Objeto3D()
-    o.LoadFile('dude.obj')
+
+    o3 = Objeto3D()
+    o3.LoadFile('dude.obj')
 
     DefineLuz()
     PosicUser()
@@ -148,7 +134,7 @@ def desenha():
     glMatrixMode(GL_MODELVIEW)
 
     DesenhaPiso()
-    #DesenhaCubo()    
+    #DesenhaCubo()
     o.Desenha()
     o.DesenhaWireframe()
     #o.DesenhaVertices()
@@ -162,9 +148,23 @@ def desenha2():
     glMatrixMode(GL_MODELVIEW)
 
     DesenhaPiso()
-    #DesenhaCubo()    
+    #DesenhaCubo()
     o2.Desenha()
     o2.DesenhaWireframe()
+    #o.DesenhaVertices()
+
+    glutSwapBuffers()
+    pass
+
+def desenha3():
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+
+    glMatrixMode(GL_MODELVIEW)
+
+    DesenhaPiso()
+    #DesenhaCubo()
+    o3.Desenha()
+    o3.DesenhaWireframe()
     #o.DesenhaVertices()
 
     glutSwapBuffers()
@@ -175,7 +175,6 @@ def morphing(obj1: Objeto3D, obj2: Objeto3D):
 
     pass
 
-def comparaVertices
 def teclado(key, x, y):
     o.rotation = (0, 1, 0, o.rotation[3] + 10)
 
@@ -218,7 +217,7 @@ def main():
     glutInitWindowSize(400, 400)
 
     # Especifica a posição de início da janela
-    glutInitWindowPosition(450, 100)
+    glutInitWindowPosition(550, 100)
 
     # Cria a janela passando o título da mesma como argumento
     glutCreateWindow('Computacao Grafica: 3D 2nd window')
@@ -228,6 +227,30 @@ def main():
 
     # Registra a funcao callback de redesenho da janela de visualizacao
     glutDisplayFunc(desenha2)
+
+    # Registra a funcao callback para tratamento das teclas ASCII
+    glutKeyboardFunc(teclado)
+
+    glutInit(sys.argv)
+
+    #3rd window
+    # Define o modelo de operacao da GLUT
+    glutInitDisplayMode(GLUT_RGBA | GLUT_DEPTH)
+
+    # Especifica o tamnho inicial em pixels da janela GLUT
+    glutInitWindowSize(400, 400)
+
+    # Especifica a posição de início da janela
+    glutInitWindowPosition(1000, 100)
+
+    # Cria a janela passando o título da mesma como argumento
+    glutCreateWindow('Computacao Grafica: 3D 3rd window')
+
+    # Função responsável por fazer as inicializações
+    init()
+
+    # Registra a funcao callback de redesenho da janela de visualizacao
+    glutDisplayFunc(desenha3)
 
     # Registra a funcao callback para tratamento das teclas ASCII
     glutKeyboardFunc(teclado)
