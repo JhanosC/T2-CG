@@ -42,7 +42,7 @@ def init():
     DefineLuz()  # Set up lighting
     PosicUser()  # Set camera position
 
-    morpher = Morphing(o2, o)
+    morpher = Morphing(o2, o, o3)
 
 def DefineLuz():
     """
@@ -178,13 +178,13 @@ def desenha3():
 
     # Perform morphing
     morphed_object = morpher.morphing(t)
-    morphed_object.Desenha()
-    morphed_object.DesenhaWireframe()
+    #morphed_object.Desenha()
+    #morphed_object.DesenhaWireframe()
 
     #DesenhaCubo()
-    #o3.Desenha()
-    #o3.DesenhaWireframe()
-    #o.DesenhaVertices()
+    o3.Desenha()
+    o3.DesenhaWireframe()
+    #o3.DesenhaVertices()
 
     t += direction * 0.01
     if t >= 1.0 or t <= 0.0:

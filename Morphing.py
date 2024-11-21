@@ -2,10 +2,11 @@ from Objeto3D import *
 from Ponto import *
 
 class Morphing:
-    def __init__(self, obj1:Objeto3D, obj2: Objeto3D):
+    def __init__(self, obj1:Objeto3D, obj2: Objeto3D, obj3: Objeto3D):
         self.obj1 = obj1
         self.obj2 = obj2
         self.obj1PontosUtilizados = [0] * len(obj1.vertices) #inicializa um array com 0's
+        self.obj3 = obj3
         pass
 
     def morphing(self, t: float) ->  Objeto3D:
@@ -46,9 +47,11 @@ class Morphing:
 
         # Assign the morphed vertices to the new object
         morphed.vertices = morphed_vertices
+        self.obj3.vertices = morphed_vertices
         return morphed
 
-
+    def morphing2(self):
+        pass
     def compareVertices(self):
         pass
 
