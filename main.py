@@ -34,10 +34,10 @@ def init():
     o.LoadFile('macaco.obj')
 
     o2 = Objeto3D()
-    o2.LoadFile('cube.obj')
+    o2.LoadFile('models\\easy3.obj')
 
     o3 = Objeto3D()
-    o3.LoadFile('macaco.obj')
+    #o3.LoadFile('macaco.obj')
 
     DefineLuz()  # Set up lighting
     PosicUser()  # Set camera position
@@ -82,7 +82,7 @@ def PosicUser():
     glLoadIdentity()  # Reset the matrix
 
     # Set up the camera view
-    gluLookAt(-2, 1, -4, 0, 0, 0, 0, 1.0, 0)  # Observer position, target, and up vector
+    gluLookAt(2, 1, 6, 0, 0, 0, 0, 0.5, 0)  # Observer position, target, and up vector
 
 def DesenhaLadrilho():
     """
@@ -141,9 +141,9 @@ def desenha():
 
     glMatrixMode(GL_MODELVIEW)
 
-    morphed_object = morpher.morphing(t)
-    morphed_object.Desenha()
-    morphed_object.DesenhaWireframe()
+    #morphed_object = morpher.morphing(t)
+    #morphed_object.Desenha()
+    #morphed_object.DesenhaWireframe()
 
     DesenhaPiso()
     #DesenhaCubo()
@@ -177,7 +177,7 @@ def desenha3():
     DesenhaPiso()  # Draw the floor
 
     # Perform morphing
-    morphed_object = morpher.morphing(t)
+    morpher.morphing(t)
     #morphed_object.Desenha()
     #morphed_object.DesenhaWireframe()
 
@@ -186,7 +186,7 @@ def desenha3():
     o3.DesenhaWireframe()
     #o3.DesenhaVertices()
 
-    t += direction * 0.01
+    t += direction * 0.05
     if t >= 1.0 or t <= 0.0:
         direction *= -1  # Reverse direction at bounds
 
@@ -195,7 +195,7 @@ def desenha3():
     pass
 
 def teclado(key, x, y):
-    o.rotation = (0, 1, 0, o.rotation[3] + 10)
+    o3.rotation = (0, 1, 0, o3.rotation[3] + 10)
 
     glutPostRedisplay()
     pass
