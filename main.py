@@ -31,10 +31,10 @@ def init():
 
     # Load 3D models
     o = Objeto3D()
-    o.LoadFile('dude.obj')
+    o.LoadFile('easy3.obj')
 
     o2 = Objeto3D()
-    o2.LoadFile('macaco.obj')
+    o2.LoadFile('easy2.obj')
 
     o3 = Objeto3D()
     o3.LoadFile('dude.obj')

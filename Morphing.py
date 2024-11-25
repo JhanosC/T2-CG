@@ -50,6 +50,7 @@ class Morphing:
         self.obj3.vertices = morphed_vertices
         return morphed
 
+
     def morphing2(self):
         pass
     def compareVertices(self):
