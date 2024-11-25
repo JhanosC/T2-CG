@@ -34,7 +34,7 @@ def init():
     o.LoadFile('macaco.obj')
 
     o2 = Objeto3D()
-    o2.LoadFile('models\\easy3.obj')
+    o2.LoadFile('models\\hard1.obj')
 
     o3 = Objeto3D()
     #o3.LoadFile('macaco.obj')
@@ -82,7 +82,7 @@ def PosicUser():
     glLoadIdentity()  # Reset the matrix
 
     # Set up the camera view
-    gluLookAt(2, 1, 6, 0, 0, 0, 0, 0.5, 0)  # Observer position, target, and up vector
+    gluLookAt(2, 1, 5, 0, 1, 0, 0, 0.5, 0)  # Observer position, target, and up vector
 
 def DesenhaLadrilho():
     """

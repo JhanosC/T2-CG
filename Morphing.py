@@ -34,7 +34,7 @@ class Morphing:
             face2 = faces2[i % len(faces2)]
 
             # Create a new face and interpolate vertices
-            new_face = []
+            new_faces = []
             for j in range(max(len(face1), len(face2))):
                 v1 = vertices1[face1[j % len(face1)]]
                 v2 = vertices2[face2[j % len(face2)]]
@@ -50,10 +50,10 @@ class Morphing:
                 morphed_vertices.append(interpolated_vertex)
 
                 # Add the index of the new vertex to the current face
-                new_face.append(len(morphed_vertices) - 1)
+                new_faces.append(len(morphed_vertices) - 1)
             
             # Add the new face to the morphed object
-            morphed_faces.append(new_face)
+            morphed_faces.append(new_faces)
 
         # Assign the morphed vertices and faces to the new object
         morphed.vertices = morphed_vertices

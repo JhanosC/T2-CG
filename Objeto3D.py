@@ -58,7 +58,7 @@ class Objeto3D:
         glTranslatef(self.position.x, self.position.y, self.position.z)
         glRotatef(self.rotation[3], self.rotation[0], self.rotation[1], self.rotation[2])
         glColor3f(0, 0, 0)
-        glLineWidth(2)        
+        glLineWidth(1.5)        
         
         for f in self.faces:            
             glBegin(GL_LINE_LOOP)
