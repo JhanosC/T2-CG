@@ -17,7 +17,11 @@ class Morphing:
         """
         morphed = Objeto3D()
 
+<<<<<<< Updated upstream
         # References to vertices and faces
+=======
+        #Referencias para os vertices e faces dos objetos
+>>>>>>> Stashed changes
         vertices1 = self.obj1.vertices
         vertices2 = self.obj2.vertices
         faces1 = self.obj1.faces
@@ -30,6 +34,10 @@ class Morphing:
         morphed_faces = []
         
         for i, face1 in enumerate(max_len):
+<<<<<<< Updated upstream
+=======
+            face1 = faces1[i % len(faces1)]
+>>>>>>> Stashed changes
             face2 = faces2[i % len(faces2)]
 
             # Create a new face and interpolate vertices
