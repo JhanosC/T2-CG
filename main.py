@@ -1,95 +1,105 @@
-from OpenGL.GLUT import *
-from OpenGL.GLU import *
-from OpenGL.GL import *
+from OpenGL.GLUT import *  # Import OpenGL Utility Toolkit for creating windows and managing input
+from OpenGL.GLU import *  # Import OpenGL Utility Library for perspective and other utilities
+from OpenGL.GL import *   # Import OpenGL for rendering
 
-from Objeto3D import *
+from Objeto3D import *    # Import custom 3D object class
+from Morphing import *
 
-o:Objeto3D
-o2:Objeto3D
+# Global variables to hold 3D objects
+o: Objeto3D
+o2: Objeto3D
+o3: Objeto3D
+t = 0.0
+direction = 1
+morpher: Morphing
+
 
 def init():
-    global o
-    global o2
-    glClearColor(0.5, 0.5, 0.9, 1.0)
-    glClearDepth(1.0)
+    """
+    Initializes the OpenGL context and loads 3D objects.
+    Sets up the scene with a clear background color, depth testing, and face culling.
+    Also loads files into Objeto3D instances and initializes lighting and camera.
+    """
+    global o, o2, o3, morpher
+    glClearColor(0.5, 0.5, 0.9, 1.0)  # Set background color to light blue
+    glClearDepth(1.0)  # Set depth buffer clear value
 
-    glDepthFunc(GL_LESS)
-    glEnable(GL_DEPTH_TEST)
-    glEnable(GL_CULL_FACE)
-    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
+    glDepthFunc(GL_LESS)  # Specify the depth comparison function
+    glEnable(GL_DEPTH_TEST)  # Enable depth testing
+    glEnable(GL_CULL_FACE)  # Enable face culling
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)  # Set polygon mode to fill
 
+    # Load 3D models
     o = Objeto3D()
     o.LoadFile('macaco.obj')
+
     o2 = Objeto3D()
-    o2.LoadFile('dude.obj')
+    o2.LoadFile('cube.obj')
 
-    DefineLuz()
-    PosicUser()
+    o3 = Objeto3D()
+    o3.LoadFile('macaco.obj')
 
+    DefineLuz()  # Set up lighting
+    PosicUser()  # Set camera position
+
+    morpher = Morphing(o, o2, o3)
 
 def DefineLuz():
-    # Define cores para um objeto dourado
-    luz_ambiente = [0.4, 0.4, 0.4]
-    luz_difusa = [0.7, 0.7, 0.7]
-    luz_especular = [0.9, 0.9, 0.9]
-    posicao_luz = [2.0, 3.0, 0.0]  # PosiÃ§Ã£o da Luz
-    especularidade = [1.0, 1.0, 1.0]
+    """
+    Configures the lighting for the scene, defining ambient, diffuse, and specular components.
+    Also specifies material properties for the objects.
+    """
+    luz_ambiente = [0.4, 0.4, 0.4]  # Ambient light intensity
+    luz_difusa = [0.7, 0.7, 0.7]    # Diffuse light intensity
+    luz_especular = [0.9, 0.9, 0.9] # Specular light intensity
+    posicao_luz = [2.0, 3.0, 0.0]   # Position of the light source
+    especularidade = [1.0, 1.0, 1.0] # Specular reflection coefficient
 
-    # ****************  Fonte de Luz 0
+    glEnable(GL_COLOR_MATERIAL)  # Enable color tracking for materials
+    glEnable(GL_LIGHTING)        # Enable lighting calculations
 
-    glEnable(GL_COLOR_MATERIAL)
-
-    #Habilita o uso de iluminaÃ§Ã£o
-    glEnable(GL_LIGHTING)
-
-    #Ativa o uso da luz ambiente
+    # Set ambient light model
     glLightModelfv(GL_LIGHT_MODEL_AMBIENT, luz_ambiente)
-    # Define os parametros da luz nÃºmero Zero
     glLightfv(GL_LIGHT0, GL_AMBIENT, luz_ambiente)
     glLightfv(GL_LIGHT0, GL_DIFFUSE, luz_difusa)
     glLightfv(GL_LIGHT0, GL_SPECULAR, luz_especular)
     glLightfv(GL_LIGHT0, GL_POSITION, posicao_luz)
-    glEnable(GL_LIGHT0)
+    glEnable(GL_LIGHT0)  # Enable light 0
 
-    # Ativa o "Color Tracking"
-    glEnable(GL_COLOR_MATERIAL)
-
-    # Define a reflectancia do material
+    # Define material properties
     glMaterialfv(GL_FRONT, GL_SPECULAR, especularidade)
-
-    # Define a concentraÃ§Ã£oo do brilho.
-    # Quanto maior o valor do Segundo parametro, mais
-    # concentrado serÃ¡ o brilho. (Valores vÃ¡lidos: de 0 a 128)
-    glMateriali(GL_FRONT, GL_SHININESS, 51)
+    glMateriali(GL_FRONT, GL_SHININESS, 51)  # Shininess level
 
 def PosicUser():
-    glMatrixMode(GL_PROJECTION)
-    glLoadIdentity()
+    """
+    Sets the camera position and perspective projection for viewing the 3D scene.
+    """
+    glMatrixMode(GL_PROJECTION)  # Switch to projection matrix
+    glLoadIdentity()  # Reset the matrix
 
-    # Configura a matriz da projeção perspectiva (FOV, proporção da tela, distância do mínimo antes do clipping, distância máxima antes do clipping
-    # https://registry.khronos.org/OpenGL-Refpages/gl2.1/xhtml/gluPerspective.xml
-    gluPerspective(60, 16/9, 0.01, 50)  # Projecao perspectiva
-    glMatrixMode(GL_MODELVIEW)
-    glLoadIdentity()
+    gluPerspective(60, 16/9, 0.01, 50)  # Configure perspective projection (FOV, aspect ratio, near, far)
+    glMatrixMode(GL_MODELVIEW)  # Switch to model view matrix
+    glLoadIdentity()  # Reset the matrix
 
-    #Especifica a matriz de transformação da visualização
-    # As três primeiras variáveis especificam a posição do observador nos eixos x, y e z
-    # As três próximas especificam o ponto de foco nos eixos x, y e z
-    # As três últimas especificam o vetor up
-    # https://registry.khronos.org/OpenGL-Refpages/gl2.1/xhtml/gluLookAt.xml
-    gluLookAt(-2, 1, -4, 0, 0, 0, 0, 1.0, 0)
+    # Set up the camera view
+    gluLookAt(-2, 1, -4, 0, 0, 0, 0, 1.0, 0)  # Observer position, target, and up vector
 
 def DesenhaLadrilho():
-    glColor3f(0.5, 0.5, 0.5)  # desenha QUAD preenchido
+    """
+    Draws a single tile (quad) in the 3D scene, including both the filled shape and its border.
+    """
+    # Draw filled quad
+    glColor3f(0.5, 0.5, 0.5)  # Set tile color to gray
     glBegin(GL_QUADS)
-    glNormal3f(0, 1, 0)
+    glNormal3f(0, 1, 0)  # Normal vector for lighting
     glVertex3f(-0.5, 0.0, -0.5)
     glVertex3f(-0.5, 0.0, 0.5)
     glVertex3f(0.5, 0.0, 0.5)
     glVertex3f(0.5, 0.0, -0.5)
     glEnd()
 
-    glColor3f(1, 1, 1)  # desenha a borda da QUAD
+    # Draw border
+    glColor3f(1, 1, 1)  # Set border color to white
     glBegin(GL_LINE_STRIP)
     glNormal3f(0, 1, 0)
     glVertex3f(-0.5, 0.0, -0.5)
@@ -99,16 +109,19 @@ def DesenhaLadrilho():
     glEnd()
 
 def DesenhaPiso():
-    glPushMatrix()
-    glTranslated(-20, -1, -10)
-    for x in range(-20, 20):
+    """
+    Draws a floor composed of multiple tiles by translating the tile object across the grid.
+    """
+    glPushMatrix()  # Save the current matrix
+    glTranslated(-20, -1, -10)  # Position the floor
+    for x in range(-20, 20):  # Iterate over rows
         glPushMatrix()
-        for z in range(-20, 20):
-            DesenhaLadrilho()
-            glTranslated(0, 0, 1)
+        for z in range(-20, 20):  # Iterate over columns
+            DesenhaLadrilho()  # Draw a single tile
+            glTranslated(0, 0, 1)  # Move to the next position in the row
         glPopMatrix()
-        glTranslated(1, 0, 0)
-    glPopMatrix()
+        glTranslated(1, 0, 0)  # Move to the next row
+    glPopMatrix()  # Restore the matrix
 
 def DesenhaCubo():
     glPushMatrix()
@@ -128,13 +141,57 @@ def desenha():
 
     glMatrixMode(GL_MODELVIEW)
 
+    morphed_object = morpher.morphing(t)
+    morphed_object.Desenha()
+    morphed_object.DesenhaWireframe()
+
     DesenhaPiso()
-    #DesenhaCubo()    
+    #DesenhaCubo()
     o.Desenha()
     o.DesenhaWireframe()
     #o.DesenhaVertices()
 
     glutSwapBuffers()
+    pass
+
+def desenha2():
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+
+    glMatrixMode(GL_MODELVIEW)
+
+    DesenhaPiso()
+    #DesenhaCubo()
+    o2.Desenha()
+    o2.DesenhaWireframe()
+    #o.DesenhaVertices()
+
+    glutSwapBuffers()
+    pass
+
+def desenha3():
+    global t, direction, morpher
+
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+    glMatrixMode(GL_MODELVIEW)
+
+    DesenhaPiso()  # Draw the floor
+
+    # Perform morphing
+    morphed_object = morpher.morphing(t)
+    #morphed_object.Desenha()
+    #morphed_object.DesenhaWireframe()
+
+    #DesenhaCubo()
+    o3.Desenha()
+    o3.DesenhaWireframe()
+    #o3.DesenhaVertices()
+
+    t += direction * 0.01
+    if t >= 1.0 or t <= 0.0:
+        direction *= -1  # Reverse direction at bounds
+
+    glutSwapBuffers()
+    glutPostRedisplay()  # Request the next frame
     pass
 
 def teclado(key, x, y):
@@ -144,35 +201,44 @@ def teclado(key, x, y):
     pass
 
 def main():
-
+    """
+    Main function to initialize GLUT, set up multiple windows, and start the rendering loop.
+    """
+    # Initialize and configure the first window
     glutInit(sys.argv)
-
-    # Define o modelo de operacao da GLUT
     glutInitDisplayMode(GLUT_RGBA | GLUT_DEPTH)
-
-    # Especifica o tamnho inicial em pixels da janela GLUT
-    glutInitWindowSize(640, 480)
-
-    # Especifica a posição de início da janela
+    glutInitWindowSize(400, 400)
     glutInitWindowPosition(100, 100)
-
-    # Cria a janela passando o título da mesma como argumento
     glutCreateWindow('Computacao Grafica - 3D')
+    init()  # Call initialization
+    glutDisplayFunc(desenha)  # Set display callback
+    glutKeyboardFunc(teclado)  # Set keyboard callback
 
-    # Função responsável por fazer as inicializações
+    # Repeat setup for the second window
+    glutInit(sys.argv)
+    glutInitDisplayMode(GLUT_RGBA | GLUT_DEPTH)
+    glutInitWindowSize(400, 400)
+    glutInitWindowPosition(550, 100)
+    glutCreateWindow('Computacao Grafica: 3D 2nd window')
     init()
+    glutDisplayFunc(desenha2)
+    glutKeyboardFunc(teclado)
 
-    # Registra a funcao callback de redesenho da janela de visualizacao
-    glutDisplayFunc(desenha)
-
-    # Registra a funcao callback para tratamento das teclas ASCII
+    # Repeat setup for the third window
+    glutInit(sys.argv)
+    glutInitDisplayMode(GLUT_RGBA | GLUT_DEPTH)
+    glutInitWindowSize(400, 400)
+    glutInitWindowPosition(1000, 100)
+    glutCreateWindow('Computacao Grafica: 3D 3rd window')
+    init()
+    glutDisplayFunc(desenha3)
     glutKeyboardFunc(teclado)
 
     try:
-        # Inicia o processamento e aguarda interacoes do usuario
+        # Start the GLUT event processing loop
         glutMainLoop()
     except SystemExit:
-        pass
+        print('GLUT main loop exited.')
 
 if __name__ == '__main__':
     main()
