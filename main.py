@@ -9,9 +9,14 @@ from Morphing import *
 o: Objeto3D
 o2: Objeto3D
 o3: Objeto3D
+o4: Objeto3D
 t = 0.0
 direction = 1
-morpher: Morphing
+state = 1
+morpher1: Morphing
+morpher2: Morphing
+morpher3: Morphing
+morpher4: Morphing
 morphing_enabled = False
 started_morphing = False
 
@@ -22,7 +27,7 @@ def init():
     Sets up the scene with a clear background color, depth testing, and face culling.
     Also loads files into Objeto3D instances and initializes lighting and camera.
     """
-    global o, o2, o3, morpher
+    global o, o2, o3, o4, morpher1, morpher2, morpher3, morpher4
     glClearColor(0.5, 0.5, 0.9, 1.0)  # Set background color to light blue
     glClearDepth(1.0)  # Set depth buffer clear value
 
@@ -33,20 +38,26 @@ def init():
 
     # Load 3D models
     o = Objeto3D()
-    o.LoadFile('macaco.obj')
+    o.LoadFile('models\\hard1.obj')
     o.normalize()
 
     o2 = Objeto3D()
-    o2.LoadFile('models\\hard1.obj')
+    o2.LoadFile('models\\easy3.obj')
     o2.normalize()
 
     o3 = Objeto3D()
     #o3.LoadFile('macaco.obj')
 
+    o4 = Objeto3D()
+    o4.LoadFile('explosao.obj')
+
     DefineLuz()  # Set up lighting
     PosicUser()  # Set camera position
 
-    morpher = Morphing(o, o2, o3)
+    morpher1 = Morphing(o, o4, o3)
+    morpher2 = Morphing(o4, o2, o3)
+    morpher3 = Morphing(o2, o4, o3)
+    morpher4 = Morphing(o4, o, o3)
 
 def DefineLuz():
     """
@@ -167,24 +178,38 @@ def desenha2():
     pass
 
 def desenha3():
-    global t, direction, morpher, morphing_enabled
-
+    global t, direction, morpher1, morpher2, morpher3, morphing_enabled, morpherAnim, state, o1,o2,o3,o4
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     glMatrixMode(GL_MODELVIEW)
 
     DesenhaPiso()  # Draw the floor
 
-    # Faz o morphing
-    morpher.morphing(t)
-
     o3.Desenha()
     o3.DesenhaWireframe()
     #o3.DesenhaVertices()
+    if state == 1:
+        morpher1.morphing(t)
+    if state == 2:
+        morpher2.morphing(t)
+    if state == 3:
+        morpher3.morphing(t)
+        
+    if state == 4:
+        morpher4.morphing(t)
+
+
     if morphing_enabled:
         t += direction * 0.05
+        o3.rotation = (0, 1, 0, o3.rotation[3] + 90)
         if t >= 1.0 or t <= 0.0:
-            direction *= -1  # Reverse direction at bounds
-            morphing_enabled = False
+            state += 1
+            t = 0
+            if state == 5:
+                state = 1
+            #direction *= -1  # Reverse direction at bounds
+            if state == 1 or state == 3:
+                morphing_enabled = False
+            
 
     glutSwapBuffers()
     glutPostRedisplay()  # Request the next frame
