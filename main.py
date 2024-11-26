@@ -182,7 +182,7 @@ def desenha3():
         t += direction * 0.05
         if t >= 1.0 or t <= 0.0:
             direction *= -1  # Reverse direction at bounds
-            #morphing_enabled = False
+            morphing_enabled = False
 
     glutSwapBuffers()
     glutPostRedisplay()  # Request the next frame
