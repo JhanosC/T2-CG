@@ -141,12 +141,7 @@ def desenha():
 
     glMatrixMode(GL_MODELVIEW)
 
-    #morphed_object = morpher.morphing(t)
-    #morphed_object.Desenha()
-    #morphed_object.DesenhaWireframe()
-
     DesenhaPiso()
-    #DesenhaCubo()
     o.Desenha()
     o.DesenhaWireframe()
     #o.DesenhaVertices()
@@ -160,7 +155,6 @@ def desenha2():
     glMatrixMode(GL_MODELVIEW)
 
     DesenhaPiso()
-    #DesenhaCubo()
     o2.Desenha()
     o2.DesenhaWireframe()
     #o.DesenhaVertices()
@@ -176,12 +170,9 @@ def desenha3():
 
     DesenhaPiso()  # Draw the floor
 
-    # Perform morphing
+    # Faz o morphing
     morpher.morphing(t)
-    #morphed_object.Desenha()
-    #morphed_object.DesenhaWireframe()
 
-    #DesenhaCubo()
     o3.Desenha()
     o3.DesenhaWireframe()
     #o3.DesenhaVertices()
@@ -192,6 +183,7 @@ def desenha3():
 
     glutSwapBuffers()
     glutPostRedisplay()  # Request the next frame
+    
     pass
 
 def teclado(key, x, y):

@@ -10,11 +10,8 @@ class Morphing:
         pass
 
     def morphing(self, t: float) -> Objeto3D:
-        """
-        Morph obj1's faces into the coordinates of obj2's faces, matching face by face.
-        :param t: Interpolation parameter (0.0 to 1.0).
-        :return: A new morphed Objeto3D instance (obj3).
-        """
+        #Ajusta coordenadas de faces e vertices de um objeto1 e coloca nas coordenadas do objeto2
+        #As faces e vertices sendo interpoladas são guardadas no objeto3
         morphed = Objeto3D()
 
         #Referencias para os vertices e faces dos objetos
@@ -25,7 +22,7 @@ class Morphing:
 
         max_len = max(faces1,faces2)
 
-        # Morph vertices and adjust faces
+        #Arrays que guardam as faces e vertices sendo interpolados
         morphed_vertices = []
         morphed_faces = []
         
