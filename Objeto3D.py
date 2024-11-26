@@ -87,4 +87,26 @@ class Objeto3D:
         glPopMatrix()
         pass
 
+    def normalize(self):
+
+        # Bounding box
+        min_x = min(v.x for v in self.vertices)
+        max_x = max(v.x for v in self.vertices)
+        min_y = min(v.y for v in self.vertices)
+        max_y = max(v.y for v in self.vertices)
+        min_z = min(v.z for v in self.vertices)
+        max_z = max(v.z for v in self.vertices)
+
+        # Calcula o centro para fazer a escala sem alterar posição
+        center_x = (min_x + max_x) / 2
+        center_y = (min_y + max_y) / 2
+        center_z = (min_z + max_z) / 2
+        max_dim = max(max_x - min_x, max_y - min_y, max_z - min_z)
+
+        # Altera a escala mantendo os vertices na mesma posição em relação ao centro
+        for vertex in self.vertices:
+            vertex.x = (vertex.x - center_x) / max_dim
+            vertex.y = (vertex.y - center_y) / max_dim
+            vertex.z = (vertex.z - center_z) / max_dim
+
 
