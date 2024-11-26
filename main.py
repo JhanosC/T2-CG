@@ -12,6 +12,8 @@ o3: Objeto3D
 t = 0.0
 direction = 1
 morpher: Morphing
+morphing_enabled = False
+started_morphing = False
 
 
 def init():
@@ -163,7 +165,7 @@ def desenha2():
     pass
 
 def desenha3():
-    global t, direction, morpher
+    global t, direction, morpher, morphing_enabled
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     glMatrixMode(GL_MODELVIEW)
@@ -176,26 +178,66 @@ def desenha3():
     o3.Desenha()
     o3.DesenhaWireframe()
     #o3.DesenhaVertices()
-
-    t += direction * 0.05
-    if t >= 1.0 or t <= 0.0:
-        direction *= -1  # Reverse direction at bounds
+    if morphing_enabled:
+        t += direction * 0.05
+        if t >= 1.0 or t <= 0.0:
+            direction *= -1  # Reverse direction at bounds
+            morphing_enabled = False
 
     glutSwapBuffers()
     glutPostRedisplay()  # Request the next frame
     
     pass
 
+'''
 def teclado(key, x, y):
     o3.rotation = (0, 1, 0, o3.rotation[3] + 10)
 
     glutPostRedisplay()
     pass
+'''
+
+def teclado(key, x, y):
+    """
+    Handles keyboard input to control morphing and other actions.
+    """
+    global morphing_enabled, started_morphing
+
+    # Convert key to bytes for compatibility
+    key = key.decode('utf-8').lower()
+
+    if key == ' ':  # Space bar to toggle morphing
+        morphing_enabled = not morphing_enabled  # Toggle morphing state
+        print(f"Morphing {'enabled' if morphing_enabled else 'disabled'}")
+
+    if key == 'a' and not started_morphing:
+        glutInit(sys.argv)
+        glutInitDisplayMode(GLUT_RGBA | GLUT_DEPTH)
+        glutInitWindowSize(400, 400)
+        glutInitWindowPosition(1000, 100)
+        glutCreateWindow('Computacao Grafica: 3D 3rd window')
+        init()
+        glutDisplayFunc(desenha3)
+        glutKeyboardFunc(teclado)
+        started_morphing = True
+
+
+        try:
+            # Start the GLUT event processing loop
+            glutMainLoop()
+        except SystemExit:
+            print('GLUT main loop exited.')
+
+    # Example: Rotate o3 object for testing
+    o3.rotation = (0, 1, 0, o3.rotation[3] + 10)
+    glutPostRedisplay()
+
 
 def main():
     """
     Main function to initialize GLUT, set up multiple windows, and start the rendering loop.
     """
+    global morphing_enabled
     # Initialize and configure the first window
     glutInit(sys.argv)
     glutInitDisplayMode(GLUT_RGBA | GLUT_DEPTH)
@@ -215,16 +257,16 @@ def main():
     init()
     glutDisplayFunc(desenha2)
     glutKeyboardFunc(teclado)
-
+    if morphing_enabled:
     # Repeat setup for the third window
-    glutInit(sys.argv)
-    glutInitDisplayMode(GLUT_RGBA | GLUT_DEPTH)
-    glutInitWindowSize(400, 400)
-    glutInitWindowPosition(1000, 100)
-    glutCreateWindow('Computacao Grafica: 3D 3rd window')
-    init()
-    glutDisplayFunc(desenha3)
-    glutKeyboardFunc(teclado)
+        glutInit(sys.argv)
+        glutInitDisplayMode(GLUT_RGBA | GLUT_DEPTH)
+        glutInitWindowSize(400, 400)
+        glutInitWindowPosition(1000, 100)
+        glutCreateWindow('Computacao Grafica: 3D 3rd window')
+        init()
+        glutDisplayFunc(desenha3)
+        glutKeyboardFunc(teclado)
 
     try:
         # Start the GLUT event processing loop
