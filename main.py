@@ -229,7 +229,10 @@ def teclado(key, x, y):
             print('GLUT main loop exited.')
 
     # Example: Rotate o3 object for testing
-    o3.rotation = (0, 1, 0, o3.rotation[3] + 10)
+    if key == 'd':
+        o3.rotation = (0, 1, 0, o3.rotation[3] + 10)
+    if key == 'a' and started_morphing:
+        o3.rotation = (0, 1, 0, o3.rotation[3] - 10)
     glutPostRedisplay()
 
 
