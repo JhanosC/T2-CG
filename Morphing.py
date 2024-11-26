@@ -20,42 +20,41 @@ class Morphing:
         faces1 = self.obj1.faces
         faces2 = self.obj2.faces
 
-        max_len = max(faces1,faces2)
+        max_len_faces = max(faces1,faces2)
 
         #Arrays que guardam as faces e vertices sendo interpolados
         morphed_vertices = []
         morphed_faces = []
         
-        for i, face1 in enumerate(max_len):
+        for i, face1 in enumerate(max_len_faces):
             face1 = faces1[i % len(faces1)]
             face2 = faces2[i % len(faces2)]
 
-            # Create a new face and interpolate vertices
+            #Array auxiliar para guardar as faces com os vertices interpolados
             new_faces = []
+
             for j in range(max(len(face1), len(face2))):
                 v1 = vertices1[face1[j % len(face1)]]
                 v2 = vertices2[face2[j % len(face2)]]
 
-                # Interpolate vertex positions
+                #Interpolação dos vertices
                 interpolated_vertex = Ponto(
                     x=(1 - t) * v1.x + t * v2.x,
                     y=(1 - t) * v1.y + t * v2.y,
                     z=(1 - t) * v1.z + t * v2.z
                 )
 
-                # Add the new vertex to the morphed vertices list
+                #Adiciona os vertices sendo interpolados a lista de vertices a ser aplicado ao objeto
                 morphed_vertices.append(interpolated_vertex)
 
-                # Add the index of the new vertex to the current face
+                #Adiciona os vertices sendo interpolados as novas faces que serão aplicadas ao objeto
                 new_faces.append(len(morphed_vertices) - 1)
-            
-            # Add the new face to the morphed object
+
             morphed_faces.append(new_faces)
 
-        # Assign the morphed vertices and faces to the new object
         morphed.vertices = morphed_vertices
-        morphed.faces = morphed_faces
 
+        #Aplica as faces e vertices sendo interpolados ao objeto
         self.obj3.vertices = morphed_vertices
         self.obj3.faces = morphed_faces
 

@@ -198,17 +198,14 @@ def teclado(key, x, y):
 '''
 
 def teclado(key, x, y):
-    """
-    Handles keyboard input to control morphing and other actions.
-    """
     global morphing_enabled, started_morphing
 
-    # Convert key to bytes for compatibility
+    # Conversão das teclas para questão de compatibilidade
     key = key.decode('utf-8').lower()
 
-    if key == ' ':  # Space bar to toggle morphing
+    if key == ' ':  # Liga e desliga morphing com barra de espaço
         morphing_enabled = not morphing_enabled  # Toggle morphing state
-        print(f"Morphing {'enabled' if morphing_enabled else 'disabled'}")
+        #print(f"Morphing {'enabled' if morphing_enabled else 'disabled'}")
 
     if key == 'a' and not started_morphing:
         glutInit(sys.argv)
@@ -221,14 +218,7 @@ def teclado(key, x, y):
         glutKeyboardFunc(teclado)
         started_morphing = True
 
-
-        try:
-            # Start the GLUT event processing loop
-            glutMainLoop()
-        except SystemExit:
-            print('GLUT main loop exited.')
-
-    # Example: Rotate o3 object for testing
+    # Rotaciona objeto
     if key == 'd':
         o3.rotation = (0, 1, 0, o3.rotation[3] + 10)
     if key == 'a' and started_morphing:
